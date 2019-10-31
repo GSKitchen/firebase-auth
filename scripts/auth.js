@@ -1,13 +1,33 @@
+//add admin
+const adminForm = document.querySelector(".admin-actions");
+adminForm.addEventListener("submit", e => {
+  e.preventDefault();
+  const adminEmail = document.getElementById("admin-email").value;
+  const addAdminRole = functions.httpsCallable("addAdminRole");
+  addAdminRole({ email: adminEmail }).then(res => {
+    console.log(res);
+    adminForm.reset();
+  });
+});
+
 // track user status
 auth.onAuthStateChanged(user => {
   if (user) {
-    setupNavbar(user);
+    //is admin
+    user.getIdTokenResult().then(idTokenResult => {
+      user.admin = idTokenResult.claims.admin;
+      setupNavbar(user);
+    });
     //getting data from db
-    db.collection("guides")
-      .get()
-      .then(snapshot => {
+    db.collection("guides").onSnapshot(
+      snapshot => {
         setupGuides(snapshot.docs);
-      });
+        //setupNavbar(user);
+      },
+      err => {
+        //console.log(err.message);
+      }
+    );
   } else {
     console.log("user logged out");
     setupNavbar();
@@ -44,11 +64,22 @@ signupForm.addEventListener("submit", e => {
   const email = signupForm["signup-email"].value;
   const password = signupForm["signup-password"].value;
 
-  auth.createUserWithEmailAndPassword(email, password).then(() => {
-    const signupModal = document.querySelector("#modal-signup");
-    M.Modal.getInstance(signupModal).close();
-    signupForm.reset();
-  });
+  auth
+    .createUserWithEmailAndPassword(email, password)
+    .then(cred => {
+      cred.user.sendEmailVerification();
+      return db
+        .collection("users")
+        .doc(cred.user.uid)
+        .set({
+          bio: signupForm["signup-bio"].value
+        });
+    })
+    .then(() => {
+      const signupModal = document.querySelector("#modal-signup");
+      M.Modal.getInstance(signupModal).close();
+      signupForm.reset();
+    });
 });
 
 // logout
@@ -67,7 +98,7 @@ loginForm.addEventListener("submit", e => {
   const password = loginForm["login-password"].value;
 
   auth.signInWithEmailAndPassword(email, password).then(cred => {
-    console.log(cred);
+    //console.log(cred);
     const loginModal = document.querySelector("#modal-login");
     M.Modal.getInstance(loginModal).close();
     loginForm.reset();

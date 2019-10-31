@@ -40,13 +40,34 @@ const setupGuides = data => {
 //setup navbar
 const logoutLinks = document.querySelectorAll(".logged-out");
 const loginLinks = document.querySelectorAll(".logged-in");
+const accountLink = document.querySelector(".account-details");
+const adminItems = document.querySelectorAll(".admin");
 
-const setupNavbar = (user) => {
-  if(user){
-    loginLinks.forEach(item => item.style.display = 'block');
-    logoutLinks.forEach(item => item.style.display = 'none');
-  }else{
-    loginLinks.forEach(item => item.style.display = 'none');
-    logoutLinks.forEach(item => item.style.display = 'block');
+const setupNavbar = user => {
+  if (user) {
+    if (user.admin) {
+      adminItems.forEach(item => {
+        item.style.display = "block";
+      });
+    }
+    db.collection("users")
+      .doc(user.uid)
+      .get()
+      .then(doc => {
+        const html = `<div>Logged in as <b>${
+          user.email
+        }</b></div><div>Bio: <b>${
+          doc.data().bio
+        }</b></div><div class="pink-text ">${user.admin ? "Admin" : ""}</div>`;
+        accountLink.innerHTML = html;
+      });
+
+    loginLinks.forEach(item => (item.style.display = "block"));
+    logoutLinks.forEach(item => (item.style.display = "none"));
+  } else {
+    accountLink.innerHTML = "";
+    loginLinks.forEach(item => (item.style.display = "none"));
+    logoutLinks.forEach(item => (item.style.display = "block"));
+    adminItems.forEach(item => (item.style.display = "none"));
   }
-}
+};
