@@ -9,28 +9,33 @@ document.addEventListener("DOMContentLoaded", function() {
 
 //populate guides list
 const guideList = document.querySelector(".guides");
+const resendDiv = document.getElementById("resendDiv");
 
-const setupGuides = data => {
+const setupGuides = (data, user) => {
   if (data.length) {
     guideList.innerHTML = "";
-    data.forEach(doc => {
-      const guide = doc.data();
+    if (user.emailVerified) {
+      data.forEach(doc => {
+        const guide = doc.data();
 
-      const li = document.createElement("li");
+        const li = document.createElement("li");
 
-      const divTitle = document.createElement("div");
-      divTitle.setAttribute("class", "collapsible-header grey lighten-4");
-      divTitle.textContent = guide.title;
+        const divTitle = document.createElement("div");
+        divTitle.setAttribute("class", "collapsible-header grey lighten-4");
+        divTitle.textContent = guide.title;
 
-      const divBody = document.createElement("div");
-      divBody.setAttribute("class", "collapsible-body white");
-      divBody.textContent = guide.content;
+        const divBody = document.createElement("div");
+        divBody.setAttribute("class", "collapsible-body white");
+        divBody.textContent = guide.content;
 
-      li.appendChild(divTitle);
-      li.appendChild(divBody);
+        li.appendChild(divTitle);
+        li.appendChild(divBody);
 
-      guideList.appendChild(li);
-    });
+        guideList.appendChild(li);
+      });
+    } else {
+      resendDiv.style.display = "block";
+    }
   } else {
     guideList.innerHTML =
       '<h3 class="center-align grey-text">Please log in to view Guides</h3>';

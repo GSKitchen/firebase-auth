@@ -13,6 +13,7 @@ adminForm.addEventListener("submit", e => {
 // track user status
 auth.onAuthStateChanged(user => {
   if (user) {
+    console.log(user.emailVerified);
     //is admin
     user.getIdTokenResult().then(idTokenResult => {
       user.admin = idTokenResult.claims.admin;
@@ -21,7 +22,7 @@ auth.onAuthStateChanged(user => {
     //getting data from db
     db.collection("guides").onSnapshot(
       snapshot => {
-        setupGuides(snapshot.docs);
+        setupGuides(snapshot.docs, user);
         //setupNavbar(user);
       },
       err => {
@@ -31,7 +32,7 @@ auth.onAuthStateChanged(user => {
   } else {
     console.log("user logged out");
     setupNavbar();
-    setupGuides([]);
+    setupGuides([], null);
   }
 });
 
@@ -112,5 +113,39 @@ loginForm.addEventListener("submit", e => {
     })
     .catch(err => {
       loginForm.querySelector(".error").innerHTML = err.message;
+    });
+});
+
+// resend email
+const resendEmail = document.getElementById("resendEmail");
+resendEmail.addEventListener("click", e => {
+  console.log("button clicked");
+  auth.currentUser
+    .sendEmailVerification()
+    .then(res => {
+      console.log(res);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
+
+// Google sign in
+const googleSignin = document.getElementById("googleSignin");
+googleSignin.addEventListener("click", e => {
+  e.preventDefault();
+  const provider = new firebase.auth.GoogleAuthProvider();
+
+  auth
+    .signInWithPopup(provider)
+    .then(res => {
+      const token = res.credential.accessToken;
+      const user = res.user;
+      console.log(user);
+      const signupModal = document.querySelector("#modal-signup");
+      M.Modal.getInstance(signupModal).close();
+    })
+    .catch(err => {
+      console.log(err);
     });
 });
