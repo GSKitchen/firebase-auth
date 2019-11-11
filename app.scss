@@ -1,0 +1,60 @@
+@import "variables";
+@import "@material/layout-grid/mdc-layout-grid";
+@import "@material/button/mdc-button";
+@import "@material/top-app-bar/mdc-top-app-bar";
+@import "@material/icon-button/mdc-icon-button";
+@import "@material/drawer/mdc-drawer";
+@import "@material/list/mdc-list";
+@import "@material/textfield/mdc-text-field";
+@import "@material/fab/mdc-fab";
+
+body {
+  font-family: "Roboto", sans-serif;
+  color: #6b6969;
+}
+
+.container {
+  padding-top: 70px;
+}
+
+.username,
+.password {
+  display: block;
+  width: 300px;
+  margin: 20px auto;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 300px;
+  margin: auto;
+}
+
+.button-container button {
+  margin: 3px;
+}
+
+.mdc-top-app-bar {
+  @include mdc-top-app-bar-ink-color(white);
+}
+
+.foo-button {
+  //@include mdc-button-filled-accessible($primaryColor);
+  @include mdc-button-ink-color(white);
+}
+
+#myFab {
+  @include mdc-fab-container-color($mdc-theme-primary);
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+}
+
+@media (min-width: 1024px) {
+  #myFab {
+    @include mdc-fab-container-color($mdc-theme-primary);
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+}
