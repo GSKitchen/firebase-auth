@@ -7,6 +7,9 @@
 @import "@material/list/mdc-list";
 @import "@material/textfield/mdc-text-field";
 @import "@material/fab/mdc-fab";
+@import "@material/dialog/mdc-dialog";
+@import "@material/card/mdc-card";
+@import "@material/image-list/mdc-image-list";
 
 body {
   font-family: "Roboto", sans-serif;
@@ -21,6 +24,12 @@ body {
 .password {
   display: block;
   width: 300px;
+  margin: 20px auto;
+}
+
+.title,
+.content {
+  display: block;
   margin: 20px auto;
 }
 
@@ -56,5 +65,59 @@ body {
     @include mdc-fab-container-color($mdc-theme-primary);
     bottom: 1.5rem;
     right: 1.5rem;
+  }
+
+  .title,
+  .content {
+    display: block;
+    width: 500px;
+    margin: 20px auto;
+  }
+
+  .guide-list {
+    @include mdc-image-list-standard-columns(3);
+  }
+}
+
+.guide-card {
+  // max-width: 450px;
+  width: 100%;
+  min-width: 320px;
+  // width: 320px;
+}
+
+.guide-card-content {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.guide-card-title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  color: white;
+  padding-left: 16px;
+  padding-bottom: 15px;
+  h2 {
+    margin-bottom: 1px;
+    margin-top: 1px;
+    padding-bottom: 1px;
+  }
+  h3 {
+    margin-bottom: 1px;
+    margin-top: 1px;
+    padding-bottom: 1px;
+  }
+}
+
+@media (max-width: 768px) {
+  .guide-list {
+    @include mdc-image-list-standard-columns(2);
+  }
+}
+
+@media (max-width: 480px) {
+  .guide-list {
+    @include mdc-image-list-standard-columns(1);
   }
 }
