@@ -113,11 +113,10 @@
 
   <!-- GUIDE LIST -->
   <div class="container" style="margin-top: 40px;">
-    <ul class="collapsible z-depth-0 guides" style="border: none;"></ul>
+    <ul class="users"></ul>
+    <div class="articles"></div>
     <hr>
-    <button id="btnToken">Get Token</button>
-    <br>
-    <code id="codeToken"></code>
+    <div class="post-details"></div>
   </div>
 
   <!-- RESEND EMAIL -->
@@ -155,7 +154,8 @@
   const functions = firebase.functions();
 </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-  <script src="scripts/auth.js"></script>
-  <script src="scripts/index.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="scripts/auth-post.js"></script>
+  <script src="scripts/post.js"></script>
 </body>
 </html>

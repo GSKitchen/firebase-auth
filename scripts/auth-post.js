@@ -13,26 +13,18 @@ adminForm.addEventListener("submit", e => {
 // track user status
 auth.onAuthStateChanged(user => {
   if (user) {
-    console.log(user.refreshToken);
+    //console.log(user);
     //is admin
     user.getIdTokenResult().then(idTokenResult => {
+      //console.log(idTokenResult.token);
+      localStorage.setItem('firebaseToken', idTokenResult.token);
       user.admin = idTokenResult.claims.admin;
       setupNavbar(user);
+      displayPost(user);
     });
-    //getting data from db
-    db.collection("guides").onSnapshot(
-      snapshot => {
-        setupGuides(snapshot.docs, user);
-        //setupNavbar(user);
-      },
-      err => {
-        //console.log(err.message);
-      }
-    );
   } else {
     console.log("user logged out");
     setupNavbar();
-    setupGuides([], null);
   }
 });
 
@@ -91,6 +83,7 @@ signupForm.addEventListener("submit", e => {
 const logout = document.querySelector("#logout");
 logout.addEventListener("click", e => {
   e.preventDefault();
+  localStorage.removeItem('firebaseToken');
   auth.signOut();
 });
 
@@ -132,6 +125,7 @@ resendEmail.addEventListener("click", e => {
     });
 });
 
+
 // Google sign in
 const googleSignin = document.getElementById("googleSignin");
 googleSignin.addEventListener("click", e => {
@@ -153,16 +147,3 @@ googleSignin.addEventListener("click", e => {
 });
 
 
-//get token
-const btnToken = document.getElementById('btnToken');
-const codeToken = document.getElementById('codeToken');
-
-btnToken.addEventListener('click', (e) => {
-  e.preventDefault();
-  auth.currentUser.getIdToken(true).then((idToken) => {
-    codeToken.innerHTML = idToken;
-  }).catch((err) => {
-    console.log(err);
-  });
-  //codeToken.innerHTML = "hello there!";
-});
